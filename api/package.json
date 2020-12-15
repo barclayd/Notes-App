@@ -4,6 +4,8 @@
   "description": "A TypeScript starter for Serverless Framework",
   "main": "handler.js",
   "scripts": {
+    "run:local": "serverless invoke local --function hello",
+    "deploy": "serverless deploy",
     "test": "serverless-bundle test"
   },
   "author": "",

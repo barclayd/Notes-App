@@ -4,7 +4,9 @@ interface UpdatedServerless {
   useDotenv: boolean;
 }
 
-type LatestServerless = Serverless | UpdatedServerless
+type LatestServerless = Serverless & UpdatedServerless;
+
+const LONDON_REGION = 'eu-west-2';
 
 const serverlessConfig: LatestServerless = {
   service: 'notes-api',
@@ -12,10 +14,28 @@ const serverlessConfig: LatestServerless = {
   provider: {
     name: 'aws',
     runtime: 'nodejs12.x',
-    region: 'eu-west-2',
+    region: LONDON_REGION,
+    environment: {
+      tableName: 'notes',
+    },
     apiGateway: {
       shouldStartNameWithService: true,
     } as ApiGateway,
+    iamRoleStatements: [
+      {
+        Effect: 'Allow',
+        Action: [
+          'dynamodb:Scan',
+          'dynamodb:Query',
+          'dynamodb:GetItem',
+          'dynamodb:PutItem',
+          'dynamodb:UpdateItem',
+          'dynamodb:DeleteItem',
+          'dynamodb:DescribeTable',
+        ],
+        Resource: `arn:aws:dynamodb:${LONDON_REGION}:*:*`,
+      },
+    ],
   },
   package: {
     individually: true,
@@ -27,6 +47,17 @@ const serverlessConfig: LatestServerless = {
   ],
   useDotenv: true,
   functions: {
+    create: {
+      handler: 'create.main',
+      events: [
+        {
+          http: {
+            path: 'notes',
+            method: 'post',
+          },
+        },
+      ],
+    },
     hello: {
       handler: 'handler.hello',
       events: [
