@@ -1,13 +1,15 @@
 import AWS from 'aws-sdk';
-import { DocumentClient } from 'aws-sdk/clients/dynamodb';
+import { DocumentClient, GetItemOutput } from 'aws-sdk/clients/dynamodb';
 
 class DynamoDBService {
   constructor(
     private client: DocumentClient = new AWS.DynamoDB.DocumentClient(),
   ) {}
 
-  public async get(params: DocumentClient.GetItemInput) {
-    await this.client.get(params).promise();
+  public async get(
+    params: DocumentClient.GetItemInput,
+  ): Promise<GetItemOutput> {
+    return await this.client.get(params).promise();
   }
 
   public async put(params: DocumentClient.PutItemInput) {

@@ -1,9 +1,9 @@
 import { v4 as uuid } from 'uuid';
 import { APIGatewayEvent, Context } from 'aws-lambda';
 import { DocumentClient } from 'aws-sdk/clients/dynamodb';
-import { dynamoDBService } from './services/DynamoDBService';
-import { LambdaService } from './services/LambdaService';
-import { Lambda } from './types/lambda';
+import { dynamoDBService } from '../services/DynamoDBService';
+import { LambdaService } from '../services/LambdaService';
+import { Lambda } from '../types/lambda';
 
 export async function main(event: APIGatewayEvent, context: Context) {
   const lambda: Lambda = async ({ event, context }) => {

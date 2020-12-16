@@ -48,12 +48,23 @@ const serverlessConfig: LatestServerless = {
   useDotenv: true,
   functions: {
     create: {
-      handler: 'src/create.main',
+      handler: 'src/api/create.main',
       events: [
         {
           http: {
             path: 'notes',
             method: 'post',
+          },
+        },
+      ],
+    },
+    get: {
+      handler: 'src/api/get.main',
+      events: [
+        {
+          http: {
+            path: 'notes/{id}',
+            method: 'get',
           },
         },
       ],
