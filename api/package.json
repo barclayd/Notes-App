@@ -9,7 +9,8 @@
     "run:local:list": "./scripts/localFunction.sh list",
     "run:local:update": "./scripts/localFunction.sh update",
     "run:local:delete": "./scripts/localFunction.sh delete",
-    "deploy": "serverless deploy",
+    "deploy:all": "serverless deploy",
+    "deploy:single-function": "./scripts/deployFunction.sh",
     "test": "serverless-bundle test"
   },
   "author": "",

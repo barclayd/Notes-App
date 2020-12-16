@@ -23,6 +23,9 @@ const awsFunction = (
         http: {
           path: `notes${path ?? ''}`,
           method,
+          authorizer: {
+            type: 'aws_iam',
+          },
         },
       },
     ],
@@ -36,6 +39,7 @@ const serverlessConfig: LatestServerless = {
     name: 'aws',
     runtime: 'nodejs12.x',
     region: LONDON_REGION,
+    stage: 'production',
     environment: {
       tableName: process.env.tableName,
     },

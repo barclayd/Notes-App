@@ -11,7 +11,7 @@ export async function main(event: APIGatewayEvent, context: Context) {
     const params: DocumentClient.PutItemInput = {
       TableName: process.env.tableName,
       Item: {
-        userId: '123',
+        userId: event.requestContext.identity.cognitoIdentityId,
         noteId: uuid(),
         content: data.content,
         attachment: data.attachment,
