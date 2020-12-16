@@ -1,4 +1,5 @@
 import type { Serverless, ApiGateway } from 'serverless/aws';
+import { Functions } from 'serverless/plugins/aws/provider/awsProvider';
 
 interface UpdatedServerless {
   useDotenv: boolean;
@@ -7,6 +8,26 @@ interface UpdatedServerless {
 type LatestServerless = Serverless & UpdatedServerless;
 
 const LONDON_REGION = 'eu-west-2';
+
+type httpMethod = 'get' | 'put' | 'post';
+
+const awsFunction = (
+  name: string,
+  method: httpMethod = 'get',
+  path?: string,
+): Functions => ({
+  [name]: {
+    handler: `src/api/${name}.main`,
+    events: [
+      {
+        http: {
+          path: `notes${path ?? ''}`,
+          method,
+        },
+      },
+    ],
+  },
+});
 
 const serverlessConfig: LatestServerless = {
   service: 'notes-api',
@@ -47,39 +68,10 @@ const serverlessConfig: LatestServerless = {
   ],
   useDotenv: true,
   functions: {
-    create: {
-      handler: 'src/api/create.main',
-      events: [
-        {
-          http: {
-            path: 'notes',
-            method: 'post',
-          },
-        },
-      ],
-    },
-    get: {
-      handler: 'src/api/get.main',
-      events: [
-        {
-          http: {
-            path: 'notes/{id}',
-            method: 'get',
-          },
-        },
-      ],
-    },
-    list: {
-      handler: 'src/api/list.main',
-      events: [
-        {
-          http: {
-            path: 'notes',
-            method: 'get',
-          },
-        },
-      ],
-    },
+    ...awsFunction('create', 'post'),
+    ...awsFunction('get', 'get', '/${id}'),
+    ...awsFunction('list'),
+    ...awsFunction('update', 'put', '/{id}'),
   },
 };
 
