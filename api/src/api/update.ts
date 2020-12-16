@@ -9,7 +9,7 @@ export async function main(event: APIGatewayEvent, context: Context) {
     const params: DocumentClient.UpdateItemInput = {
       TableName: process.env.tableName,
       Key: {
-        userId: '123',
+        userId: event.requestContext.identity.cognitoIdentityId,
         noteId: event.pathParameters.id,
       },
       UpdateExpression: 'SET content = :content, attachment = :attachment',

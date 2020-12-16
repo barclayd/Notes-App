@@ -9,7 +9,7 @@ export async function main(event: APIGatewayEvent, context: Context) {
       TableName: process.env.tableName,
       KeyConditionExpression: 'userId = :userId',
       ExpressionAttributeValues: {
-        ':userId': '123',
+        ':userId': event.requestContext.identity.cognitoIdentityId,
       },
     };
     const result = await dynamoDBService.query(params);

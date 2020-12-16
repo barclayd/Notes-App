@@ -8,7 +8,7 @@ export async function main(event: APIGatewayEvent, context: Context) {
     const params: DocumentClient.DeleteItemInput = {
       TableName: process.env.tableName,
       Key: {
-        userId: '123',
+        userId: event.requestContext.identity.cognitoIdentityId,
         noteId: event.pathParameters.id,
       },
     };
