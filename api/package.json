@@ -4,8 +4,9 @@
   "description": "Notes api built on serverless infrastructure, hosted on AWS",
   "main": "handler.js",
   "scripts": {
-    "run:local:create": "serverless invoke local --function create --path mocks/create-event.json",
-    "run:local:get": "serverless invoke local --function get --path mocks/get-event.json",
+    "run:local:create": "./scripts/localFunction.sh create",
+    "run:local:get": "./scripts/localFunction.sh get",
+    "run:local:list": "./scripts/localFunction.sh list",
     "deploy": "serverless deploy",
     "test": "serverless-bundle test"
   },
