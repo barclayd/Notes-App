@@ -9,7 +9,7 @@ type LatestServerless = Serverless & UpdatedServerless;
 
 const LONDON_REGION = 'eu-west-2';
 
-type httpMethod = 'get' | 'put' | 'post';
+type httpMethod = 'get' | 'put' | 'post' | 'delete';
 
 const awsFunction = (
   name: string,
@@ -37,7 +37,7 @@ const serverlessConfig: LatestServerless = {
     runtime: 'nodejs12.x',
     region: LONDON_REGION,
     environment: {
-      tableName: 'notes',
+      tableName: process.env.tableName,
     },
     apiGateway: {
       shouldStartNameWithService: true,
@@ -72,6 +72,7 @@ const serverlessConfig: LatestServerless = {
     ...awsFunction('get', 'get', '/${id}'),
     ...awsFunction('list'),
     ...awsFunction('update', 'put', '/{id}'),
+    ...awsFunction('delete', 'delete', '/{id}'),
   },
 };
 
