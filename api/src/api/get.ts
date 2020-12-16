@@ -1,11 +1,10 @@
 import { dynamoDBService } from '../services/DynamoDBService';
-import { LambdaService } from '../services/LambdaService';
 import { APIGatewayEvent, Context } from 'aws-lambda';
-import { Lambda } from '../types/lambda';
 import { DocumentClient } from 'aws-sdk/clients/dynamodb';
+import { lambdaWrapper } from '../helpers/lambda';
 
 export async function main(event: APIGatewayEvent, context: Context) {
-  const lambda: Lambda = async ({ event, context }) => {
+  return await lambdaWrapper(event, context, async () => {
     const params: DocumentClient.GetItemInput = {
       TableName: process.env.tableName,
       Key: {
@@ -18,6 +17,5 @@ export async function main(event: APIGatewayEvent, context: Context) {
       throw new Error('Item not found');
     }
     return result.Item;
-  };
-  return await new LambdaService(lambda, event, context).execute();
+  });
 }

@@ -1,4 +1,5 @@
 import type { Serverless, ApiGateway } from 'serverless/aws';
+import { Functions } from 'serverless/plugins/aws/provider/awsProvider';
 
 interface UpdatedServerless {
   useDotenv: boolean;
@@ -8,6 +9,26 @@ type LatestServerless = Serverless & UpdatedServerless;
 
 const LONDON_REGION = 'eu-west-2';
 
+type httpMethod = 'get' | 'put' | 'post' | 'delete';
+
+const awsFunction = (
+  name: string,
+  method: httpMethod = 'get',
+  path?: string,
+): Functions => ({
+  [name]: {
+    handler: `src/api/${name}.main`,
+    events: [
+      {
+        http: {
+          path: `notes${path ?? ''}`,
+          method,
+        },
+      },
+    ],
+  },
+});
+
 const serverlessConfig: LatestServerless = {
   service: 'notes-api',
   frameworkVersion: '2',
@@ -16,7 +37,7 @@ const serverlessConfig: LatestServerless = {
     runtime: 'nodejs12.x',
     region: LONDON_REGION,
     environment: {
-      tableName: 'notes',
+      tableName: process.env.tableName,
     },
     apiGateway: {
       shouldStartNameWithService: true,
@@ -47,28 +68,11 @@ const serverlessConfig: LatestServerless = {
   ],
   useDotenv: true,
   functions: {
-    create: {
-      handler: 'src/api/create.main',
-      events: [
-        {
-          http: {
-            path: 'notes',
-            method: 'post',
-          },
-        },
-      ],
-    },
-    get: {
-      handler: 'src/api/get.main',
-      events: [
-        {
-          http: {
-            path: 'notes/{id}',
-            method: 'get',
-          },
-        },
-      ],
-    },
+    ...awsFunction('create', 'post'),
+    ...awsFunction('get', 'get', '/${id}'),
+    ...awsFunction('list'),
+    ...awsFunction('update', 'put', '/{id}'),
+    ...awsFunction('delete', 'delete', '/{id}'),
   },
 };
 
