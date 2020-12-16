@@ -16,8 +16,10 @@ class DynamoDBService {
     await this.client.put(params).promise();
   }
 
-  public async query(params: DocumentClient.QueryInput) {
-    await this.client.query(params).promise();
+  public async query(
+    params: DocumentClient.QueryInput,
+  ): Promise<DocumentClient.QueryOutput> {
+    return await this.client.query(params).promise();
   }
 
   public async update(params: DocumentClient.UpdateItemInput) {

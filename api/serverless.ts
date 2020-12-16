@@ -69,6 +69,17 @@ const serverlessConfig: LatestServerless = {
         },
       ],
     },
+    list: {
+      handler: 'src/api/list.main',
+      events: [
+        {
+          http: {
+            path: 'notes',
+            method: 'get',
+          },
+        },
+      ],
+    },
   },
 };
 
