@@ -2,11 +2,10 @@ import { v4 as uuid } from 'uuid';
 import { APIGatewayEvent, Context } from 'aws-lambda';
 import { DocumentClient } from 'aws-sdk/clients/dynamodb';
 import { dynamoDBService } from '../services/DynamoDBService';
-import { LambdaService } from '../services/LambdaService';
-import { Lambda } from '../types/lambda';
+import { lambdaWrapper } from '../helpers/lambda';
 
 export async function main(event: APIGatewayEvent, context: Context) {
-  const lambda: Lambda = async ({ event, context }) => {
+  return await lambdaWrapper(event, context, async () => {
     const data = JSON.parse(event.body);
 
     const params: DocumentClient.PutItemInput = {
@@ -21,6 +20,5 @@ export async function main(event: APIGatewayEvent, context: Context) {
     };
     await dynamoDBService.put(params);
     return params.Item;
-  };
-  return await new LambdaService(lambda, event, context).execute();
+  });
 }
