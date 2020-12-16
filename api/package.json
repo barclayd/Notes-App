@@ -1,9 +1,11 @@
 {
-  "name": "serverless-typescript-starter",
+  "name": "notes-serverless-api",
   "version": "0.1.0",
-  "description": "A TypeScript starter for Serverless Framework",
+  "description": "Notes api built on serverless infrastructure, hosted on AWS",
   "main": "handler.js",
   "scripts": {
+    "run:local": "serverless invoke local --function create --path mocks/create-event.json",
+    "deploy": "serverless deploy",
     "test": "serverless-bundle test"
   },
   "author": "",
