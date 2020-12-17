@@ -9,7 +9,7 @@ export async function main(event: APIGatewayEvent, context: Context) {
     const data = JSON.parse(event.body);
 
     const params: DocumentClient.PutItemInput = {
-      TableName: process.env.tableName,
+      TableName: process.env.TABLE_NAME,
       Item: {
         userId: event.requestContext.identity.cognitoIdentityId,
         noteId: uuid(),

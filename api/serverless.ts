@@ -15,13 +15,14 @@ const awsFunction = (
   name: string,
   method: httpMethod = 'get',
   path?: string,
+  basePath = 'notes',
 ): Functions => ({
   [name]: {
     handler: `src/api/${name}.main`,
     events: [
       {
         http: {
-          path: `notes${path ?? ''}`,
+          path: `${basePath}${path ?? ''}`,
           method,
           authorizer: {
             type: 'aws_iam',
@@ -41,7 +42,8 @@ const serverlessConfig: LatestServerless = {
     region: LONDON_REGION,
     stage: 'production',
     environment: {
-      tableName: process.env.tableName,
+      TABLE_NAME: process.env.TABLE_NAME,
+      STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
     },
     apiGateway: {
       shouldStartNameWithService: true,
@@ -77,6 +79,7 @@ const serverlessConfig: LatestServerless = {
     ...awsFunction('list'),
     ...awsFunction('update', 'put', '/{id}'),
     ...awsFunction('delete', 'delete', '/{id}'),
+    ...awsFunction('billing', 'post', undefined, 'billing'),
   },
 };
 

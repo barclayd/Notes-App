@@ -2,13 +2,13 @@
   "name": "notes-serverless-api",
   "version": "0.1.0",
   "description": "Notes api built on serverless infrastructure, hosted on AWS",
-  "main": "handler.js",
   "scripts": {
+    "run:local:billing": "./scripts/localFunction.sh billing",
     "run:local:create": "./scripts/localFunction.sh create",
+    "run:local:delete": "./scripts/localFunction.sh delete",
     "run:local:get": "./scripts/localFunction.sh get",
     "run:local:list": "./scripts/localFunction.sh list",
     "run:local:update": "./scripts/localFunction.sh update",
-    "run:local:delete": "./scripts/localFunction.sh delete",
     "deploy:all": "serverless deploy",
     "deploy:single-function": "./scripts/deployFunction.sh",
     "test": "serverless-bundle test"
@@ -17,11 +17,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/AnomalyInnovations/serverless-typescript-starter.git"
+    "url": "https://github.com/barclayd/notes-app"
   },
   "dependencies": {
     "aws-sdk": "^2.810.0",
     "serverless": "^2.15.0",
+    "stripe": "^8.129.0",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
