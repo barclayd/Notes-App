@@ -1,5 +1,6 @@
 import type { Serverless, ApiGateway } from 'serverless/aws';
 import { Functions } from 'serverless/plugins/aws/provider/awsProvider';
+import { apiGatewayErrors } from './src/resources';
 
 interface UpdatedServerless {
   useDotenv: boolean;
@@ -64,6 +65,11 @@ const serverlessConfig: LatestServerless = {
         Resource: `arn:aws:dynamodb:${LONDON_REGION}:*:*`,
       },
     ],
+  },
+  resources: {
+    Resources: {
+      ...apiGatewayErrors,
+    },
   },
   package: {
     individually: true,
