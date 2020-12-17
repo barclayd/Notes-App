@@ -15,7 +15,7 @@ const awsFunction = (
   name: string,
   method: httpMethod = 'get',
   path?: string,
-  basePath: string = 'notes',
+  basePath = 'notes',
 ): Functions => ({
   [name]: {
     handler: `src/api/${name}.main`,
