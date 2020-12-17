@@ -6,7 +6,7 @@ import { dynamoDBService } from '../services/DynamoDBService';
 export async function main(event: APIGatewayEvent, context: Context) {
   return await lambdaWrapper(event, context, async () => {
     const params: DocumentClient.DeleteItemInput = {
-      TableName: process.env.tableName,
+      TableName: process.env.TABLE_NAME,
       Key: {
         userId: event.requestContext.identity.cognitoIdentityId,
         noteId: event.pathParameters.id,

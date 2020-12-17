@@ -7,7 +7,7 @@ export async function main(event: APIGatewayEvent, context: Context) {
   return await lambdaWrapper(event, context, async () => {
     const data = JSON.parse(event.body);
     const params: DocumentClient.UpdateItemInput = {
-      TableName: process.env.tableName,
+      TableName: process.env.TABLE_NAME,
       Key: {
         userId: event.requestContext.identity.cognitoIdentityId,
         noteId: event.pathParameters.id,

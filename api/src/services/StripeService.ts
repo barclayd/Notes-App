@@ -3,7 +3,7 @@ import Stripe from 'stripe';
 export class StripeService {
   private stripe: Stripe;
 
-  constructor(secretKey = process.env.stripeSecretKey) {
+  constructor(secretKey = process.env.STRIPE_SECRET_KEY) {
     this.stripe = new Stripe(secretKey, {
       apiVersion: '2020-08-27',
     });
