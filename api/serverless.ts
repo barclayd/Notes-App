@@ -24,6 +24,7 @@ const awsFunction = (
         http: {
           path: `${basePath}${path ?? ''}`,
           method,
+          cors: true,
           authorizer: {
             type: 'aws_iam',
           },

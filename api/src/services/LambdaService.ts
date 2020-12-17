@@ -19,6 +19,15 @@ export class LambdaService {
     };
   }
 
+  get headers(): {
+    [key: string]: string | boolean;
+  } {
+    return {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Credentials': true,
+    };
+  }
+
   private setError(error: Error) {
     this.statusCode = 200;
     this.body = {
@@ -40,6 +49,7 @@ export class LambdaService {
     return {
       statusCode: this.statusCode,
       body: JSON.stringify(this.body),
+      headers: this.headers,
     } as HttpResponse;
   }
 }
