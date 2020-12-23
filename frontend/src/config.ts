@@ -21,17 +21,17 @@ export const config: AWSAmplifyConfig = {
   mandatorySignIn: true,
   endpointName: 'notes',
   s3: {
-    region: process.env.AWS_REGION,
-    bucket: process.env.S3_UPLOAD_BUCKET,
+    region: process.env.REACT_APP_AWS_REGION,
+    bucket: process.env.REACT_APP_S3_UPLOAD_BUCKET,
   },
   apiGateway: {
-    region: process.env.AWS_REGION,
-    url: process.env.API_GATEWAY_URL,
+    region: process.env.REACT_APP_AWS_REGION,
+    url: process.env.REACT_APP_API_GATEWAY_URL,
   },
   cognito: {
-    region: process.env.AWS_REGION,
-    userPoolId: process.env.USER_POOL_ID,
-    appClientId: process.env.APP_CLIENT_ID,
-    identityPoolId: process.env.IDENTITY_POOL_ID,
+    region: process.env.REACT_APP_AWS_REGION,
+    userPoolId: process.env.REACT_APP_USER_POOL_ID,
+    appClientId: process.env.REACT_APP_APP_CLIENT_ID,
+    identityPoolId: process.env.REACT_APP_IDENTITY_POOL_ID,
   },
 };
