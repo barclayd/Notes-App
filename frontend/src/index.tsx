@@ -4,9 +4,9 @@ import { BrowserRouter } from 'react-router-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { AWSAmplifyService } from './services/AWSAmplifyService';
+import { AmplifyService } from './services/AmplifyService';
 
-new AWSAmplifyService().setup();
+new AmplifyService().setup();
 
 ReactDOM.render(
   <React.StrictMode>

@@ -1,7 +1,7 @@
-import { Amplify } from 'aws-amplify';
+import { Amplify, Auth } from 'aws-amplify';
 import { AWSAmplifyConfig, config } from '../config';
 
-export class AWSAmplifyService {
+export class AmplifyService {
   constructor(private awsConfig: AWSAmplifyConfig = config) {}
 
   public setup() {
@@ -28,5 +28,14 @@ export class AWSAmplifyService {
         ],
       },
     });
+  }
+
+  public async login(email: string, password: string) {
+    try {
+      const hello = await Auth.signIn(email, password);
+      console.log(hello);
+    } catch (error) {
+      alert(`Login error: ${error.message}`);
+    }
   }
 }
