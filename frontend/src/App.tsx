@@ -1,11 +1,14 @@
-import React from 'react';
+import { useState } from 'react';
+import { AppContext } from './libs/contextLib';
 import './App.css';
-import { NavBar } from './NavBar';
+import { NavBar } from './components/NavBar';
 import Routes from './Routes';
 
 function App() {
+  const [isAuthenticated, setAuthentication] = useState(false);
+
   return (
-    <>
+    <AppContext.Provider value={{ isAuthenticated, setAuthentication }}>
       <NavBar />
       <header className="bg-white shadow">
         <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
@@ -24,7 +27,7 @@ function App() {
           </div>
         </div>
       </main>
-    </>
+    </AppContext.Provider>
   );
 }
 
