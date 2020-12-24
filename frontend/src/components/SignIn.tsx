@@ -1,10 +1,14 @@
 import { FC, FormEvent, useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { AmplifyService } from '../services/AmplifyService';
+import { useAppContext } from '../libs/contextLib';
+import { useHistory } from 'react-router-dom';
 
 export const SignIn: FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const { setAuthentication } = useAppContext();
+  const history = useHistory();
 
   const emailInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -18,6 +22,8 @@ export const SignIn: FC = () => {
       return;
     }
     await new AmplifyService().login(email, password);
+    setAuthentication(true);
+    history.push('/');
   };
 
   return (
