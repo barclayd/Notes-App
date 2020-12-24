@@ -1,5 +1,7 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
+import { SignIn } from './components/SignIn';
+import { SignUp } from './components/SignUp';
 
 export default function Routes() {
   return (
@@ -8,7 +10,10 @@ export default function Routes() {
         Home
       </Route>
       <Route exact path="/sign-up">
-        Hello you
+        <SignUp />
+      </Route>
+      <Route exact path="/sign-in">
+        <SignIn />
       </Route>
       <Route path="*">404!</Route>
     </Switch>
