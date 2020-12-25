@@ -1,11 +1,30 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AppContext } from './libs/contextLib';
 import './App.css';
 import { NavBar } from './components/NavBar';
 import Routes from './Routes';
+import { AmplifyService } from './services/AmplifyService';
 
 function App() {
   const [isAuthenticated, setAuthentication] = useState(false);
+  const [isAuthenticating, checkingAuthentication] = useState(false);
+
+  useEffect(() => {
+    (async () => {
+      await new AmplifyService().validateSession(
+        () => {
+          setAuthentication(true);
+        },
+        () => {
+          checkingAuthentication(false);
+        },
+      );
+    })();
+  }, []);
+
+  if (isAuthenticating) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <AppContext.Provider value={{ isAuthenticated, setAuthentication }}>

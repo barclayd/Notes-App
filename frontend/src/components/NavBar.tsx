@@ -1,10 +1,18 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { useAppContext } from '../libs/contextLib';
+import { AmplifyService } from '../services/AmplifyService';
 
 export const NavBar = () => {
   const [showProfileDropdown, setProfileDropdown] = useState(false);
-  const { isAuthenticated } = useAppContext();
+  const { isAuthenticated, setAuthentication } = useAppContext();
+  const history = useHistory();
+
+  const logout = async () => {
+    history.push('/');
+    await new AmplifyService().logout();
+    setAuthentication(false);
+  };
 
   return (
     <nav className="bg-gray-800">
@@ -83,7 +91,10 @@ export const NavBar = () => {
           </div>
           <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
             {isAuthenticated ? (
-              <button className="bg-blue-300 text-white px-3 mx-1 py-2 rounded-md text-sm font-medium focus:outline-none">
+              <button
+                onClick={logout}
+                className="bg-blue-300 text-white px-3 mx-1 py-2 rounded-md text-sm font-medium focus:outline-none"
+              >
                 Logout
               </button>
             ) : (

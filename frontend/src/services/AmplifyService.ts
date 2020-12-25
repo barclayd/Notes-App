@@ -30,12 +30,31 @@ export class AmplifyService {
     });
   }
 
-  public async login(email: string, password: string) {
+  public async login(email: string, password: string, onLogin: () => void) {
     try {
-      const hello = await Auth.signIn(email, password);
-      console.log(hello);
+      await Auth.signIn(email, password);
+      onLogin();
     } catch (error) {
       alert(`Login error: ${error.message}`);
     }
+  }
+
+  public async validateSession(
+    onCurrentUser: () => void,
+    onComplete: () => void,
+  ) {
+    try {
+      await Auth.currentSession();
+      onCurrentUser();
+    } catch (error) {
+      if (error !== 'No current user') {
+        alert(error);
+      }
+    }
+    onComplete();
+  }
+
+  public async logout() {
+    await Auth.signOut();
   }
 }

@@ -21,9 +21,10 @@ export const SignIn: FC = () => {
     if (!(email.length > 0 && password.length > 0)) {
       return;
     }
-    await new AmplifyService().login(email, password);
-    setAuthentication(true);
-    history.push('/');
+    await new AmplifyService().login(email, password, () => {
+      setAuthentication(true);
+      history.push('/');
+    });
   };
 
   return (
