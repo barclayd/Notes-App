@@ -30,12 +30,18 @@ export class AmplifyService {
     });
   }
 
-  public async login(email: string, password: string, onLogin: () => void) {
+  public async login(
+    email: string,
+    password: string,
+    onLogin: () => void,
+    onError: () => void,
+  ) {
     try {
       await Auth.signIn(email, password);
       onLogin();
     } catch (error) {
       alert(`Login error: ${error.message}`);
+      onError();
     }
   }
 

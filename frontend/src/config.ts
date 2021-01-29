@@ -1,5 +1,5 @@
 export interface AWSAmplifyConfig {
-  mandatorySignIn: boolean,
+  mandatorySignIn: boolean;
   endpointName: string;
   s3: {
     region: string;

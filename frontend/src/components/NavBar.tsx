@@ -10,7 +10,7 @@ export const NavBar = () => {
   const history = useHistory();
 
   const logout = async () => {
-    history.push('/');
+    history.push('/sign-in');
     await new AmplifyService().logout();
     setAuthentication(false);
   };
