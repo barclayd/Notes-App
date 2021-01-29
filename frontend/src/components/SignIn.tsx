@@ -3,10 +3,12 @@ import { Link } from 'react-router-dom';
 import { AmplifyService } from '../services/AmplifyService';
 import { useAppContext } from '../libs/contextLib';
 import { useHistory } from 'react-router-dom';
+import { Spinner } from './Spinner';
 
 export const SignIn: FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const { setAuthentication } = useAppContext();
   const history = useHistory();
 
@@ -21,10 +23,17 @@ export const SignIn: FC = () => {
     if (!(email.length > 0 && password.length > 0)) {
       return;
     }
-    await new AmplifyService().login(email, password, () => {
-      setAuthentication(true);
-      history.push('/');
-    });
+    setIsLoading(true);
+    await new AmplifyService().login(
+      email,
+      password,
+      () => {
+        setAuthentication(true);
+        history.push('/');
+        setIsLoading(false);
+      },
+      () => setIsLoading(false),
+    );
   };
 
   return (
@@ -128,7 +137,7 @@ export const SignIn: FC = () => {
                   />
                 </svg>
               </span>
-              Login
+              {isLoading ? <Spinner /> : 'Login'}
             </button>
           </div>
         </form>
