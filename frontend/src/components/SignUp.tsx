@@ -4,6 +4,7 @@ import { useForm } from '../hooks/useForm';
 import { useAppContext } from '../libs/contextLib';
 import '../styles/form.css';
 import { Spinner } from './Spinner';
+import { AmplifyService } from '../services/AmplifyService';
 
 const blockPaste = (event: ClipboardEvent<HTMLInputElement>) => {
   event.preventDefault();
@@ -24,6 +25,8 @@ interface SignUpForm {
   confirmPassword: string;
   confirmPasscode: string;
 }
+
+const amplifyService = new AmplifyService();
 
 export const SignUp: FC = () => {
   const { form, setForm } = useForm<SignUpForm>({
@@ -47,13 +50,33 @@ export const SignUp: FC = () => {
       return;
     }
     setIsLoading(true);
-    setUser('test');
-    setIsLoading(false);
+    await amplifyService.signUp(
+      form.email,
+      form.password,
+      () => {
+        setUser(form.email);
+        setIsLoading(false);
+      },
+      () => {
+        setIsLoading(false);
+      },
+    );
   };
 
-  const onSubmitConfirmCode = (event: FormEvent<HTMLFormElement>) => {
+  const onSubmitConfirmCode = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setIsLoading(true);
+    await amplifyService.confirmSignUp(
+      form.email,
+      form.password,
+      form.confirmPasscode,
+      () => {
+        setAuthentication(true);
+        setIsLoading(false);
+        history.push('/');
+      },
+      () => setIsLoading(false),
+    );
   };
 
   const renderSignUpForm = () => (
