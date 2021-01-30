@@ -45,6 +45,39 @@ export class AmplifyService {
     }
   }
 
+  public async signUp(
+    email: string,
+    password: string,
+    onSignUp: () => void,
+    onError: () => void,
+  ) {
+    try {
+      await Auth.signUp({ username: email, password: password });
+      onSignUp();
+    } catch (error) {
+      alert(`Sign up error: ${error.message}`);
+      onError();
+    }
+  }
+
+  public async confirmSignUp(
+    email: string,
+    password: string,
+    passcode: string,
+    onConfirmSignUp: () => void,
+    onError: () => void,
+  ) {
+    try {
+      await Auth.confirmSignUp(email, passcode);
+      await this.login(email, password, onConfirmSignUp, () => {
+        throw new Error('Error logging into account');
+      });
+    } catch (error) {
+      alert(`Sign up error: ${error.message}`);
+      onError();
+    }
+  }
+
   public async validateSession(
     onCurrentUser: () => void,
     onComplete: () => void,

@@ -7,7 +7,7 @@ export const useForm = <T>(initialState: T) => {
     setForm: (event: ChangeEvent<HTMLInputElement>) => {
       setForm({
         ...form,
-        [event.target.id]: event.target.value,
+        [event.target.id]: event.target.value?.trim(),
       });
     },
   };
