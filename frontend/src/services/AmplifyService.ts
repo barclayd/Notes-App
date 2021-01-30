@@ -30,12 +30,70 @@ export class AmplifyService {
     });
   }
 
-  public async login(email: string, password: string) {
+  public async login(
+    email: string,
+    password: string,
+    onLogin: () => void,
+    onError: () => void,
+  ) {
     try {
-      const hello = await Auth.signIn(email, password);
-      console.log(hello);
+      await Auth.signIn(email, password);
+      onLogin();
     } catch (error) {
       alert(`Login error: ${error.message}`);
+      onError();
     }
+  }
+
+  public async signUp(
+    email: string,
+    password: string,
+    onSignUp: () => void,
+    onError: () => void,
+  ) {
+    try {
+      await Auth.signUp({ username: email, password: password });
+      onSignUp();
+    } catch (error) {
+      alert(`Sign up error: ${error.message}`);
+      onError();
+    }
+  }
+
+  public async confirmSignUp(
+    email: string,
+    password: string,
+    passcode: string,
+    onConfirmSignUp: () => void,
+    onError: () => void,
+  ) {
+    try {
+      await Auth.confirmSignUp(email, passcode);
+      await this.login(email, password, onConfirmSignUp, () => {
+        throw new Error('Error logging into account');
+      });
+    } catch (error) {
+      alert(`Sign up error: ${error.message}`);
+      onError();
+    }
+  }
+
+  public async validateSession(
+    onCurrentUser: () => void,
+    onComplete: () => void,
+  ) {
+    try {
+      await Auth.currentSession();
+      onCurrentUser();
+    } catch (error) {
+      if (error !== 'No current user') {
+        alert(error);
+      }
+    }
+    onComplete();
+  }
+
+  public async logout() {
+    await Auth.signOut();
   }
 }

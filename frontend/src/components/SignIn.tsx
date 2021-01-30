@@ -3,10 +3,23 @@ import { Link } from 'react-router-dom';
 import { AmplifyService } from '../services/AmplifyService';
 import { useAppContext } from '../libs/contextLib';
 import { useHistory } from 'react-router-dom';
+import { Spinner } from './Spinner';
+import { useForm } from '../hooks/useForm';
+
+interface SignInForm {
+  email: string;
+  password: string;
+}
 
 export const SignIn: FC = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const {
+    form: { email, password },
+    setForm,
+  } = useForm<SignInForm>({
+    email: '',
+    password: '',
+  });
+  const [isLoading, setIsLoading] = useState(false);
   const { setAuthentication } = useAppContext();
   const history = useHistory();
 
@@ -21,9 +34,17 @@ export const SignIn: FC = () => {
     if (!(email.length > 0 && password.length > 0)) {
       return;
     }
-    await new AmplifyService().login(email, password);
-    setAuthentication(true);
-    history.push('/');
+    setIsLoading(true);
+    await new AmplifyService().login(
+      email,
+      password,
+      () => {
+        setAuthentication(true);
+        setIsLoading(false);
+        history.push('/');
+      },
+      () => setIsLoading(false),
+    );
   };
 
   return (
@@ -49,18 +70,18 @@ export const SignIn: FC = () => {
           <input type="hidden" name="remember" value="true" />
           <div className="rounded-md shadow-sm -space-y-px">
             <div>
-              <label htmlFor="email-address" className="sr-only">
+              <label htmlFor="email" className="sr-only">
                 Email address
               </label>
               <input
-                id="email-address"
+                id="email"
                 name="email"
                 type="email"
                 autoFocus
                 autoComplete="email"
                 ref={emailInputRef}
                 value={email}
-                onChange={(event) => setEmail(event.target.value)}
+                onChange={setForm}
                 required
                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                 placeholder="Email address"
@@ -74,7 +95,7 @@ export const SignIn: FC = () => {
                 id="password"
                 name="password"
                 value={password}
-                onChange={(event) => setPassword(event.target.value)}
+                onChange={setForm}
                 type="password"
                 autoComplete="current-password"
                 required
@@ -127,7 +148,7 @@ export const SignIn: FC = () => {
                   />
                 </svg>
               </span>
-              Login
+              {isLoading ? <Spinner /> : 'Login'}
             </button>
           </div>
         </form>

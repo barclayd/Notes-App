@@ -1,10 +1,19 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { useAppContext } from '../libs/contextLib';
+import { AmplifyService } from '../services/AmplifyService';
+import { NavBarButton } from './NavBarButton';
 
 export const NavBar = () => {
   const [showProfileDropdown, setProfileDropdown] = useState(false);
-  const { isAuthenticated } = useAppContext();
+  const { isAuthenticated, setAuthentication } = useAppContext();
+  const history = useHistory();
+
+  const logout = async () => {
+    history.push('/sign-in');
+    await new AmplifyService().logout();
+    setAuthentication(false);
+  };
 
   return (
     <nav className="bg-gray-800">
@@ -66,34 +75,45 @@ export const NavBar = () => {
             </div>
             <div className="hidden sm:block sm:ml-6">
               <div className="flex space-x-4">
-                <button className="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium focus:outline-none">
-                  <Link to="/">Dashboard</Link>
-                </button>
-                <button className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium focus:outline-none">
-                  <Link to="/notes">Notes</Link>
-                </button>
-                <button className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium focus:outline-none">
-                  <Link to="/shared">Shared</Link>
-                </button>
-                <button className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium focus:outline-none">
-                  <Link to="/settings">Settings</Link>
-                </button>
+                <Link to="/">
+                  <button className="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium focus:outline-none">
+                    Dashboard
+                  </button>
+                </Link>
+                <Link to="/notes">
+                  <button className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium focus:outline-none">
+                    Notes
+                  </button>
+                </Link>
+                <Link to="/shared">
+                  <button className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium focus:outline-none">
+                    Shared
+                  </button>
+                </Link>
+                <Link to="/settings">
+                  <button className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium focus:outline-none">
+                    Settings
+                  </button>
+                </Link>
               </div>
             </div>
           </div>
           <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
             {isAuthenticated ? (
-              <button className="bg-blue-300 text-white px-3 mx-1 py-2 rounded-md text-sm font-medium focus:outline-none">
+              <button
+                onClick={logout}
+                className="bg-blue-300 text-white px-3 mx-1 py-2 rounded-md text-sm font-medium focus:outline-none"
+              >
                 Logout
               </button>
             ) : (
               <>
-                <button className="bg-blue-300 text-white px-3 mx-1 py-2 rounded-md text-sm font-medium focus:outline-none">
-                  <Link to="/sign-in">Sign in</Link>
-                </button>
-                <button className="border-blue-300 border-solid text-white border-2 mx-3 px-3 py-2 rounded-md text-sm font-medium focus:outline-none">
-                  <Link to="/sign-up">Sign up</Link>
-                </button>
+                <NavBarButton
+                  path="sign-in"
+                  alternativePath="/"
+                  label="Sign in"
+                />
+                <NavBarButton path="sign-up" label="Sign up" />
               </>
             )}
             <button className="bg-gray-800 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
