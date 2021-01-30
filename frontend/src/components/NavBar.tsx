@@ -108,7 +108,11 @@ export const NavBar = () => {
               </button>
             ) : (
               <>
-                <NavBarButton path="sign-in" label="Sign in" />
+                <NavBarButton
+                  path="sign-in"
+                  alternativePath="/"
+                  label="Sign in"
+                />
                 <NavBarButton path="sign-up" label="Sign up" />
               </>
             )}
