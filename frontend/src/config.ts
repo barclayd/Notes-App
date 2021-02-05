@@ -35,3 +35,7 @@ export const config: AWSAmplifyConfig = {
     identityPoolId: process.env.REACT_APP_IDENTITY_POOL_ID,
   },
 };
+
+export const NoteConfig = {
+  MAX_ATTACHMENT_SIZE: 5000000,
+};
