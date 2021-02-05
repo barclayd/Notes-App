@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { AmplifyService } from '../services/AmplifyService';
 import { useAppContext } from '../libs/contextLib';
 import { useHistory } from 'react-router-dom';
-import { Spinner } from './Spinner';
+import { Spinner } from '../components/Spinner';
 import { useForm } from '../hooks/useForm';
 
 interface SignInForm {

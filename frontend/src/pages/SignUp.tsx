@@ -3,7 +3,7 @@ import { Link, useHistory } from 'react-router-dom';
 import { useForm } from '../hooks/useForm';
 import { useAppContext } from '../libs/contextLib';
 import '../styles/form.css';
-import { Spinner } from './Spinner';
+import { Spinner } from '../components/Spinner';
 import { AmplifyService } from '../services/AmplifyService';
 
 const blockPaste = (event: ClipboardEvent<HTMLInputElement>) => {
