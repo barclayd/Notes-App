@@ -1,17 +1,20 @@
 import { ChangeEvent, FC, FormEvent, useRef, useState } from 'react';
 import { Spinner } from '../components/Spinner';
 import { NoteConfig } from '../config';
+import { NoteService } from '../services/NoteService';
+import { useHistory } from 'react-router-dom';
 
 export const NewNote: FC = () => {
-  const file = useRef<File | null>(null);
+  const file = useRef<File | undefined>(undefined);
   const [text, setText] = useState('');
   const [isLoading, setLoading] = useState(false);
+  const history = useHistory();
 
   const onFileChange = (event: ChangeEvent<HTMLInputElement>) => {
-    file.current = event.target.files?.[0] ?? null;
+    file.current = event.target.files?.[0];
   };
 
-  const onSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (
       file.current?.size &&
@@ -25,6 +28,19 @@ export const NewNote: FC = () => {
       return;
     }
     setLoading(true);
+    await new NoteService().createNote(
+      {
+        content: text,
+        attachment: file.current,
+      },
+      () => {
+        history.push('/notes');
+      },
+      (errorMessage) => {
+        alert('Error occurred whilst creating note: ' + errorMessage);
+        setLoading(false);
+      },
+    );
   };
 
   return (
