@@ -1,7 +1,8 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
-import { SignIn } from './components/SignIn';
-import { SignUp } from './components/SignUp';
+import { SignIn } from './pages/SignIn';
+import { SignUp } from './pages/SignUp';
+import { NewNote } from './pages/NewNote';
 
 export default function Routes() {
   return (
@@ -14,6 +15,9 @@ export default function Routes() {
       </Route>
       <Route exact path="/sign-in">
         <SignIn />
+      </Route>
+      <Route exact path="/notes/new">
+        <NewNote />
       </Route>
       <Route path="*">404!</Route>
     </Switch>
