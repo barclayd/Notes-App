@@ -3,12 +3,13 @@ import { Switch, Route } from 'react-router-dom';
 import { SignIn } from './pages/SignIn';
 import { SignUp } from './pages/SignUp';
 import { NewNote } from './pages/NewNote';
+import { Notes } from './pages/Notes';
 
 export default function Routes() {
   return (
     <Switch>
       <Route exact path="/">
-        Home
+        <Notes />
       </Route>
       <Route exact path="/sign-up">
         <SignUp />
