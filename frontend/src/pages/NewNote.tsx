@@ -34,7 +34,7 @@ export const NewNote: FC = () => {
         attachment: file.current,
       },
       () => {
-        history.push('/notes');
+        history.push('/');
       },
       (errorMessage) => {
         alert('Error occurred whilst creating note: ' + errorMessage);
