@@ -1,6 +1,6 @@
 import { Storage } from 'aws-amplify';
 
-type StorageVault = {
+type StorageVaultPut = {
   key: string;
 };
 
@@ -9,7 +9,11 @@ export class S3Service {
     const filename = `${Date.now()}-${file.name}`;
     const stored = (await Storage.vault.put(filename, file, {
       contentType: file.type,
-    })) as StorageVault;
+    })) as StorageVaultPut;
     return stored.key;
+  }
+
+  public async get(fileName: string) {
+    return (await Storage.vault.get(fileName)) as string;
   }
 }

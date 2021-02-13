@@ -1,5 +1,7 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { Note as NoteType } from '../types';
+import { S3Service } from '../services/S3Service';
+import { useAsyncEffect } from '../hooks/useAsyncEffect';
 
 interface Props {
   note: NoteType;
@@ -48,21 +50,37 @@ const noteTimeSuffix = (noteHours: number) => (noteHours >= 12 ? 'PM' : 'AM');
 const note12HourTime = (noteHours: number) =>
   noteHours >= 12 ? noteHours - 12 : noteHours;
 
+const s3Service = new S3Service();
+
 export const Note: FC<Props> = ({ note, onClick }) => {
+  const [downloadLink, setDownloadLink] = useState(note.attachment);
+
   const noteDate = new Date(note.createdAt);
   const noteDay = `${dayMap.get(
     noteDate.getDay(),
   )} ${noteDate.getDay()}${dateSuffix(noteDate.getDay())}`;
   const noteMonth = monthMap.get(noteDate.getMonth())!;
   const noteYear = noteDate.getFullYear();
+  const noteMinutes =
+    noteDate.getMinutes() < 10
+      ? `0${noteDate.getMinutes()}`
+      : noteDate.getMinutes();
   const noteTime = `${note12HourTime(
     noteDate.getHours(),
-  )}:${noteDate.getMinutes()} ${noteTimeSuffix(noteDate.getHours())}`;
+  )}:${noteMinutes} ${noteTimeSuffix(noteDate.getHours())}`;
   const noteDateString = `${noteTime} - ${noteDay} ${noteMonth} ${noteYear}`;
+
+  useAsyncEffect(async () => {
+    if (!note.attachment) {
+      return;
+    }
+    const s3DownloadLink = await s3Service.get(note.attachment);
+    setDownloadLink(s3DownloadLink);
+  }, []);
 
   return (
     <div
-      className="bg-white shadow overflow-hidden sm:rounded-lg my-6"
+      className="bg-white shadow overflow-hidden sm:rounded-lg my-6 rounded-md"
       onClick={onClick}
     >
       <div className="px-4 py-5 sm:px-6 cursor-pointer">
@@ -79,69 +97,43 @@ export const Note: FC<Props> = ({ note, onClick }) => {
               {note.content}
             </dd>
           </div>
-          <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-            <dt className="text-sm font-medium text-gray-500">Attachments</dt>
-            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-              <ul className="border border-gray-200 rounded-md divide-y divide-gray-200">
-                <li className="pl-3 pr-4 py-3 flex items-center justify-between text-sm">
-                  <div className="w-0 flex-1 flex items-center">
-                    <svg
-                      className="flex-shrink-0 h-5 w-5 text-gray-400"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                      aria-hidden="true"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M8 4a3 3 0 00-3 3v4a5 5 0 0010 0V7a1 1 0 112 0v4a7 7 0 11-14 0V7a5 5 0 0110 0v4a3 3 0 11-6 0V7a1 1 0 012 0v4a1 1 0 102 0V7a3 3 0 00-3-3z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                    <span className="ml-2 flex-1 w-0 truncate">
-                      resume_back_end_developer.pdf
-                    </span>
-                  </div>
-                  <div className="ml-4 flex-shrink-0">
-                    <a
-                      href="#"
-                      className="font-medium text-indigo-600 hover:text-indigo-500"
-                    >
-                      Download
-                    </a>
-                  </div>
-                </li>
-                <li className="pl-3 pr-4 py-3 flex items-center justify-between text-sm">
-                  <div className="w-0 flex-1 flex items-center">
-                    <svg
-                      className="flex-shrink-0 h-5 w-5 text-gray-400"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                      aria-hidden="true"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M8 4a3 3 0 00-3 3v4a5 5 0 0010 0V7a1 1 0 112 0v4a7 7 0 11-14 0V7a5 5 0 0110 0v4a3 3 0 11-6 0V7a1 1 0 012 0v4a1 1 0 102 0V7a3 3 0 00-3-3z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                    <span className="ml-2 flex-1 w-0 truncate">
-                      coverletter_back_end_developer.pdf
-                    </span>
-                  </div>
-                  <div className="ml-4 flex-shrink-0">
-                    <a
-                      href="#"
-                      className="font-medium text-indigo-600 hover:text-indigo-500"
-                    >
-                      Download
-                    </a>
-                  </div>
-                </li>
-              </ul>
-            </dd>
-          </div>
+          {note.attachment && (
+            <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+              <dt className="text-sm font-medium text-gray-500">Attachments</dt>
+              <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                <ul className="border border-gray-200 rounded-md divide-y divide-gray-200">
+                  <li className="pl-3 pr-4 py-3 flex items-center justify-between text-sm">
+                    <div className="w-0 flex-1 flex items-center">
+                      <svg
+                        className="flex-shrink-0 h-5 w-5 text-gray-400"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                        aria-hidden="true"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M8 4a3 3 0 00-3 3v4a5 5 0 0010 0V7a1 1 0 112 0v4a7 7 0 11-14 0V7a5 5 0 0110 0v4a3 3 0 11-6 0V7a1 1 0 012 0v4a1 1 0 102 0V7a3 3 0 00-3-3z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                      <span className="ml-2 flex-1 w-0 truncate">
+                        {note.attachment}
+                      </span>
+                    </div>
+                    <div className="ml-4 flex-shrink-0">
+                      <a
+                        href={downloadLink}
+                        className="font-medium text-indigo-600 hover:text-indigo-500"
+                      >
+                        Open
+                      </a>
+                    </div>
+                  </li>
+                </ul>
+              </dd>
+            </div>
+          )}
         </dl>
       </div>
     </div>

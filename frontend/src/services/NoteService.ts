@@ -15,7 +15,9 @@ export class NoteService {
 
   public async load<T>(path: string): Promise<T | undefined> {
     try {
-      return (await API.get(this.apiName, path, undefined)) as T;
+      return (await API.get(this.apiName, path, {
+        attachment: 'attachment',
+      })) as T;
     } catch (error) {
       console.log(`Error occurred: ${error}`);
       return;
