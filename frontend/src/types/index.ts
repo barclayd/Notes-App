@@ -3,4 +3,5 @@ export type Note = {
   createdAt: number;
   noteId: string;
   userId: string;
+  attachment?: string;
 };

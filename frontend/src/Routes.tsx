@@ -4,6 +4,7 @@ import { SignIn } from './pages/SignIn';
 import { SignUp } from './pages/SignUp';
 import { NewNote } from './pages/NewNote';
 import { Notes } from './pages/Notes';
+import { SingleNote } from './pages/SingleNote';
 
 export default function Routes() {
   return (
@@ -19,6 +20,9 @@ export default function Routes() {
       </Route>
       <Route exact path="/notes/new">
         <NewNote />
+      </Route>
+      <Route exact path="/notes/:id">
+        <SingleNote />
       </Route>
       <Route path="*">404!</Route>
     </Switch>
