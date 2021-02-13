@@ -17,7 +17,7 @@ export class NoteService {
     try {
       return (await API.get(this.apiName, path, undefined)) as T;
     } catch (error) {
-      console.log(`Error occured: ${error}`);
+      console.log(`Error occurred: ${error}`);
       return;
     }
   }
