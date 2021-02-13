@@ -17,8 +17,7 @@ export const Notes = () => {
     }
     (async () => {
       const notes = await new NoteService().load<NoteType[]>('/notes');
-      console.log({ notes });
-      setNotes(notes ?? []);
+      setNotes(notes?.sort((a, b) => b.createdAt - a.createdAt) ?? []);
       setLoading(false);
     })();
   }, [isAuthenticated]);
