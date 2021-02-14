@@ -2,7 +2,6 @@ import { FC, FormEvent, useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { AmplifyService } from '../services/AmplifyService';
 import { useAppContext } from '../libs/contextLib';
-import { useHistory } from 'react-router-dom';
 import { Spinner } from '../components/Spinner';
 import { useForm } from '../hooks/useForm';
 
@@ -21,7 +20,6 @@ export const SignIn: FC = () => {
   });
   const [isLoading, setIsLoading] = useState(false);
   const { setAuthentication } = useAppContext();
-  const history = useHistory();
 
   const emailInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -40,8 +38,6 @@ export const SignIn: FC = () => {
       password,
       () => {
         setAuthentication(true);
-        setIsLoading(false);
-        history.push('/');
       },
       () => setIsLoading(false),
     );
