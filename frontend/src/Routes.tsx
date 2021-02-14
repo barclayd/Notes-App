@@ -4,7 +4,9 @@ import { SignIn } from './pages/SignIn';
 import { SignUp } from './pages/SignUp';
 import { NewNote } from './pages/NewNote';
 import { Notes } from './pages/Notes';
-import { SingleNote } from './pages/SingleNote';
+import { EditNote } from './pages/EditNote';
+import { UnauthenticatedRoute } from './routes/UnathenticatedRoute';
+import { AuthenticatedRoute } from './routes/AuthenticatedRoute';
 
 export default function Routes() {
   return (
@@ -12,18 +14,18 @@ export default function Routes() {
       <Route exact path="/">
         <Notes />
       </Route>
-      <Route exact path="/sign-up">
+      <UnauthenticatedRoute exact path="/sign-up">
         <SignUp />
-      </Route>
-      <Route exact path="/sign-in">
+      </UnauthenticatedRoute>
+      <UnauthenticatedRoute exact path="/sign-in">
         <SignIn />
-      </Route>
-      <Route exact path="/notes/new">
+      </UnauthenticatedRoute>
+      <AuthenticatedRoute exact path="/notes/new">
         <NewNote />
-      </Route>
-      <Route exact path="/notes/:id">
-        <SingleNote />
-      </Route>
+      </AuthenticatedRoute>
+      <AuthenticatedRoute exact path="/notes/:id">
+        <EditNote />
+      </AuthenticatedRoute>
       <Route path="*">404!</Route>
     </Switch>
   );
