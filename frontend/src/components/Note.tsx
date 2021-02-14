@@ -2,73 +2,17 @@ import { FC, useState } from 'react';
 import { Note as NoteType } from '../types';
 import { S3Service } from '../services/S3Service';
 import { useAsyncEffect } from '../hooks/useAsyncEffect';
+import { formattedNoteDate } from '../helpers/note';
 
 interface Props {
   note: NoteType;
   onClick: () => void;
 }
 
-const monthMap = new Map([
-  [0, 'January'],
-  [1, 'February'],
-  [2, 'March'],
-  [3, 'April'],
-  [4, 'May'],
-  [5, 'June'],
-  [6, 'July'],
-  [7, 'August'],
-  [8, 'September'],
-  [9, 'October'],
-  [10, 'November'],
-  [11, 'December'],
-]);
-
-const dayMap = new Map([
-  [0, 'Monday'],
-  [1, 'Tuesday'],
-  [2, 'Wednesday'],
-  [3, 'Thursday'],
-  [4, 'Friday'],
-  [5, 'Saturday'],
-  [6, 'Sunday'],
-]);
-
-const dateSuffixMap = new Map([
-  ['1', 'st'],
-  ['2', 'nd'],
-  ['3', 'rd'],
-]);
-
-const dateSuffix = (day: number) => {
-  const dayAsString = String(day);
-  const lastNumberOfString = dayAsString[dayAsString.length - 1];
-  return dateSuffixMap.get(lastNumberOfString) ?? 'th';
-};
-
-const noteTimeSuffix = (noteHours: number) => (noteHours >= 12 ? 'PM' : 'AM');
-
-const note12HourTime = (noteHours: number) =>
-  noteHours >= 12 ? noteHours - 12 : noteHours;
-
 const s3Service = new S3Service();
 
 export const Note: FC<Props> = ({ note, onClick }) => {
   const [downloadLink, setDownloadLink] = useState(note.attachment);
-
-  const noteDate = new Date(note.createdAt);
-  const noteDay = `${dayMap.get(
-    noteDate.getDay(),
-  )} ${noteDate.getDay()}${dateSuffix(noteDate.getDay())}`;
-  const noteMonth = monthMap.get(noteDate.getMonth())!;
-  const noteYear = noteDate.getFullYear();
-  const noteMinutes =
-    noteDate.getMinutes() < 10
-      ? `0${noteDate.getMinutes()}`
-      : noteDate.getMinutes();
-  const noteTime = `${note12HourTime(
-    noteDate.getHours(),
-  )}:${noteMinutes} ${noteTimeSuffix(noteDate.getHours())}`;
-  const noteDateString = `${noteTime} - ${noteDay} ${noteMonth} ${noteYear}`;
 
   useAsyncEffect(async () => {
     if (!note.attachment) {
@@ -85,7 +29,7 @@ export const Note: FC<Props> = ({ note, onClick }) => {
     >
       <div className="px-4 py-5 sm:px-6 cursor-pointer">
         <h3 className="text-lg leading-6 font-medium text-gray-900">
-          {noteDateString}
+          {formattedNoteDate(note)}
         </h3>
         <p className="mt-1 max-w-2xl text-sm text-gray-500">Note from web</p>
       </div>
