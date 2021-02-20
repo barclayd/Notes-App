@@ -42,7 +42,7 @@ const serverlessConfig: LatestServerless = {
     name: 'aws',
     runtime: 'nodejs12.x',
     region: LONDON_REGION,
-    stage: 'production',
+    stage: 'dev',
     environment: {
       TABLE_NAME: process.env.TABLE_NAME,
       STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
