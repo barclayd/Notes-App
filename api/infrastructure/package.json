@@ -14,7 +14,9 @@
     "@types/aws-lambda": "^8.10.70"
   },
   "dependencies": {
+    "@aws-cdk/aws-cognito": "1.89.0",
     "@aws-cdk/aws-dynamodb": "1.89.0",
+    "@aws-cdk/aws-iam": "1.89.0",
     "@aws-cdk/aws-s3": "1.89.0",
     "@aws-cdk/core": "1.89.0",
     "@serverless-stack/cli": "0.9.5",
