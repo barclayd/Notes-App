@@ -1,10 +1,20 @@
 import * as cognito from "@aws-cdk/aws-cognito";
 import * as sst from "@serverless-stack/resources";
+import * as iam from "@aws-cdk/aws-iam";
 import { CfnOutput } from "@aws-cdk/core";
+import CognitoAuthRole from "./CognitoAuthRole";
 
 export default class CognitoStack extends sst.Stack {
-  constructor(scope: sst.App, id: string, props?: sst.StackProps) {
+  constructor(
+    scope: sst.App,
+    id: string,
+    props: { bucketArn: string } & sst.StackProps
+  ) {
     super(scope, id, props);
+
+    const { bucketArn } = props;
+
+    const app = this.node.root as sst.App;
 
     const userPool = new cognito.UserPool(this, "UserPool", {
       selfSignUpEnabled: true,
@@ -18,7 +28,7 @@ export default class CognitoStack extends sst.Stack {
 
     const userPoolClient = new cognito.UserPoolClient(this, "UserPoolClient", {
       userPool,
-      generateSecret: true,
+      generateSecret: false,
     });
 
     const identityPool = new cognito.CfnIdentityPool(this, "IdentityPool", {
@@ -31,6 +41,20 @@ export default class CognitoStack extends sst.Stack {
       ],
     });
 
+    const authenticatedRole = new CognitoAuthRole(this, "CognitoAuthRole", {
+      identityPool,
+    });
+
+    authenticatedRole.role.addToPolicy(
+      new iam.PolicyStatement({
+        actions: ["s3:*"],
+        effect: iam.Effect.ALLOW,
+        resources: [
+          bucketArn + "/private/${cognito-identity.amazonaws.com:sub}/*",
+        ],
+      })
+    );
+
     new CfnOutput(this, "UserPoolId", {
       value: userPool.userPoolId,
     });
@@ -41,6 +65,11 @@ export default class CognitoStack extends sst.Stack {
 
     new CfnOutput(this, "IdentityPoolId", {
       value: identityPool.ref,
+    });
+
+    new CfnOutput(this, "AuthenticatedRoleName", {
+      value: authenticatedRole.role.roleName,
+      exportName: app.logicalPrefixedName("CognitoAuthRole"),
     });
   }
 }
