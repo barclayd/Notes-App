@@ -9,7 +9,7 @@
     "run:local:get": "./scripts/localFunction.sh get",
     "run:local:list": "./scripts/localFunction.sh list",
     "run:local:update": "./scripts/localFunction.sh update",
-    "deploy:all": "serverless deploy",
+    "deploy:all": "serverless deploy -v",
     "deploy:single-function": "./scripts/deployFunction.sh",
     "test": "serverless-bundle test"
   },

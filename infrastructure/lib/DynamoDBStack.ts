@@ -1,13 +1,12 @@
 import { CfnOutput } from '@aws-cdk/core';
 import * as dynamodb from '@aws-cdk/aws-dynamodb';
 import * as sst from '@serverless-stack/resources';
-import { App } from '@serverless-stack/resources';
 
 export default class DynamoDBStack extends sst.Stack {
   constructor(scope: sst.App, id: string, props?: sst.StackProps) {
     super(scope, id, props);
 
-    const app = scope.node.root as App;
+    const app = scope.node.root as sst.App;
 
     const table = new dynamodb.Table(this, 'Table', {
       billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
